@@ -7,6 +7,7 @@ vue/.env
 vue/.env.local
 vue/.vscode/
 vue/npm-debug.log*
+vue/dist.zip
 
 # ======================================
 # 后端 Spring Boot 忽略
@@ -18,6 +19,7 @@ springboot/*.iml
 springboot/application-dev.yml
 springboot/application-prod.yml
 springboot/*.log
+springboot/upload/
 
 # ======================================
 # 系统文件
