@@ -117,21 +117,36 @@ jobs:
           timeout: 120s
           script: |
             set -e
-            cd /home
-            
-            # 1. 先杀死旧进程（加 || true 防止无进程报错）
+            cd /home                        
+
+            # 1. 更加温和且安全的进程清理（过滤掉当前 SSH 会话和 grep 自身）
             echo "Killing old Java processes..."
-            pkill -f 'java -jar' || true
-            
-            # 2. 等待进程退出
-            sleep 2
-            
-            # 3. 启动新进程，日志输出到文件
+            PID=$(pgrep -f 'java -jar' | grep -v $$ || true)
+            if [ -n "$PID" ]; then
+              echo "Found Java PID(s): $PID, killing..."
+              kill -15 $PID || true
+              sleep 3
+              # 如果还没死透，强制杀死
+              kill -9 $PID 2>/dev/null || true
+            else
+              echo "No running Java processes found."
+            fi
+
+            # 2. 启动新进程（关键：加上 `disown` 并重定向 stdin）
             echo "Starting new JAR..."
-            nohup java -jar *.jar > app.log 2>&1 &
+            nohup java -jar *.jar > app.log 2>&1 < /dev/null &
             
-            # 4. 给进程一点启动时间
-            sleep 5
+            # 使用 disown 让后台任务彻底脱离当前 SSH 会话
+            disown %1 || true                        
+
+            # 3. 给进程一点启动时间
+            sleep 5                        
+
+            # 4. 重启 Nginx
+            echo "Restarting Nginx..."
+            systemctl restart nginx                        
+
+            echo "✅ Deployment completed successfully!"
             
             # 5. 重启 Nginx
             echo "Restarting Nginx..."
