@@ -1,0 +1,155 @@
+name: Graduate System CI/CD Pipeline
+
+# 触发条件：推送到 main 分支或 PR 到 main 分支时触发
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# 定义 jobs
+jobs:
+  # 前端 CI 任务（假设前端在 frontend/ 目录）
+  frontend-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      # - name: Lint code
+      #   working-directory: ./frontend
+      #   run: npm run lint
+
+      # - name: Run tests
+      #   working-directory: ./frontend
+      #   run: npm test
+
+      - name: Build frontend
+        working-directory: ./frontend
+        run: npm run build
+
+      - name: Upload frontend build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: ./frontend/
+
+  # 后端 CI 任务（假设后端在 backend/ 目录，Java + Maven）
+  backend-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+          cache-dependency-path: backend/pom.xml
+
+      - name: Build with Maven
+        working-directory: ./backend
+        run: mvn clean package -DskipTests
+
+      - name: Upload backend JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jar
+          path: backend/target/*.jar
+
+  # 部署任务（依赖 CI 任务成功）
+  deploy:
+    needs: [frontend-ci, backend-ci]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download frontend build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: ./frontend/
+
+      - name: Download backend JAR artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-jar
+          path: ./backend/target
+      # 部署dist和.jar
+       # 上传前端 dist 到服务器 Nginx 目录
+      - name: Upload frontend to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "./frontend/dist/*"
+          target: "/usr/share/nginx/html/"
+
+    # 上传后端 jar 到服务器 /opt/graduate-system
+      - name: Upload backend to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "./backend/*"
+          target: "/home/"
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          # 增加超时设置，避免被强制终止
+          timeout: 120s
+          script: |
+            set -e
+            cd /home                        
+
+            # 1. 更加温和且安全的进程清理（过滤掉当前 SSH 会话和 grep 自身）
+            echo "Killing old Java processes..."
+            PID=$(pgrep -f 'java -jar' | grep -v $$ || true)
+            if [ -n "$PID" ]; then
+              echo "Found Java PID(s): $PID, killing..."
+              kill -15 $PID || true
+              sleep 3
+              # 如果还没死透，强制杀死
+              kill -9 $PID 2>/dev/null || true
+            else
+              echo "No running Java processes found."
+            fi
+
+            # 2. 启动新进程（关键：加上 `disown` 并重定向 stdin）
+            echo "Starting new JAR..."
+            nohup java -jar *.jar > app.log 2>&1 < /dev/null &
+            
+            # 使用 disown 让后台任务彻底脱离当前 SSH 会话
+            disown %1 || true                        
+
+            # 3. 给进程一点启动时间
+            sleep 5                        
+
+            # 4. 重启 Nginx
+            echo "Restarting Nginx..."
+            systemctl restart nginx                        
+
+            echo "✅ Deployment completed successfully!"
+            
+            # 5. 重启 Nginx
+            echo "Restarting Nginx..."
+            systemctl restart nginx
+            
+            echo "✅ Deployment completed successfully!"
