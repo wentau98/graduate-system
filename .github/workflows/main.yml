@@ -94,7 +94,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "./dist/dist/*"
+          source: "./dist/*"
           target: "/usr/share/nginx/html/"
 
     # 上传后端 jar 到服务器 /opt/graduate-system
