@@ -43,7 +43,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: frontend-dist
-          path: ./frontend/
+          path: ./frontend/dist/
 
   # 后端 CI 任务（假设后端在 backend/ 目录，Java + Maven）
   backend-ci:
@@ -79,13 +79,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: frontend-dist
-          path: ./frontend/
+          path: ./dist
 
       - name: Download backend JAR artifact
         uses: actions/download-artifact@v4
         with:
           name: backend-jar
-          path: ./backend/target
+          path: ./jar
       # 部署dist和.jar
        # 上传前端 dist 到服务器 Nginx 目录
       - name: Upload frontend to server
@@ -94,7 +94,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "./frontend/dist/*"
+          source: "./dist/*"
           target: "/usr/share/nginx/html/"
 
     # 上传后端 jar 到服务器 /opt/graduate-system
@@ -104,7 +104,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "./backend/*"
+          source: "./jar/*.jar"
           target: "/home/"
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@master
@@ -114,7 +114,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           # 增加超时设置，避免被强制终止
-          timeout: 120s
+          timeout: 180s
           script: |
             set -e
             cd /home                        
