@@ -3,6 +3,10 @@ server:
   address: 0.0.0.0  # 关键！允许外网访问
 
 spring:
+  sql:
+    init:
+      mode: always  # 可选：always/embedded/never
+      schema-locations: classpath:db/ddl/*.sql
   main:
     allow-circular-references: true
     allow-bean-definition-overriding: true
@@ -16,10 +20,6 @@ spring:
       max-file-size: 10MB
       max-request-size: 100MB
       location: ${user.dir}/upload/temp
-  sql:
-    init:
-      mode: always  # 可选：always/embedded/never
-      schema-locations: classpath:db/ddl/*.sql
 
 mybatis-plus:
 #  mapper-locations: classpath:mapper/*.xml
