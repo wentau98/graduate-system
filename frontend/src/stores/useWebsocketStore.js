@@ -19,7 +19,7 @@ export const useSocketStore = defineStore('socket', {
       if (this.ws && this.ws.readyState === WebSocket.OPEN) return
 
       this.userId = userId
-      const wsUrl = `ws://${variables.desktopIP}:8081/ws/user/${userId}`
+      const wsUrl = `ws://${variables.desktopIP}/ws/user/${userId}`
       console.log("目前Websoket的后端IP为：",wsUrl)
       this.ws = new WebSocket(wsUrl)
 
