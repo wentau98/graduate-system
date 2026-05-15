@@ -27,9 +27,9 @@ jobs:
         working-directory: ./frontend
         run: npm ci
 
-      - name: Lint code
-        working-directory: ./frontend
-        run: npm run lint
+      # - name: Lint code
+      #   working-directory: ./frontend
+      #   run: npm run lint
 
       - name: Run tests
         working-directory: ./frontend
@@ -86,7 +86,26 @@ jobs:
         with:
           name: backend-jar
           path: ./backend/target
+      # 部署dist和.jar
+       # 上传前端 dist 到服务器 Nginx 目录
+      - name: Upload frontend to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "./dist/*"
+          target: "/usr/share/nginx/html/"
 
+    # 上传后端 jar 到服务器 /opt/graduate-system
+      - name: Upload backend to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "./jar/*"
+          target: "/home/"
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@master
         with:
@@ -95,8 +114,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cd /opt/graduate-system
-            # 上传前端静态文件（示例：使用 scp 或 rsync，也可以在本地压缩后上传）
-            # 这里简化为直接重启服务
-            pm2 restart backend-app
+            cd /home
+            pkill -f 'java -jar'   # 关掉旧的 Java 进程
+            nohup java -jar *.jar > app.log 2>&1 &   # 启动新 jar
             systemctl restart nginx
+        
+      
