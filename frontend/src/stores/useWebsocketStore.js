@@ -20,6 +20,7 @@ export const useSocketStore = defineStore('socket', {
 
       this.userId = userId
       const wsUrl = `ws://${variables.desktopIP}:8081/ws/user/${userId}`
+      console.log("目前Websoket的后端IP为：",wsUrl)
       this.ws = new WebSocket(wsUrl)
 
       // 连接成功
