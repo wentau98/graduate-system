@@ -96,6 +96,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "./dist/*"
           target: "/usr/share/nginx/html/"
+          strip_components: 1  # 🌟 关键：剥离 ./dist/ 这层目录
 
     # 上传后端 jar 到服务器 /opt/graduate-system
       - name: Upload backend to server
