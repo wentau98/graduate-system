@@ -6,10 +6,7 @@ import com.secondhand.entity.ChatContact;
 import com.secondhand.entity.ChatMessage;
 import com.secondhand.mapper.ChatContactMapper;
 import com.secondhand.mapper.SystemMessageMapper;
-import jakarta.websocket.OnClose;
-import jakarta.websocket.OnMessage;
-import jakarta.websocket.OnOpen;
-import jakarta.websocket.Session;
+import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 import lombok.extern.slf4j.Slf4j;
@@ -40,18 +37,18 @@ public class UserWebSocketServer {
 
     // 建立连接：前端带上自己userId
     @OnOpen
-    public void onOpen(Session session) {
+    public void onOpen(Session session,@PathParam("userId") String userId) {
         System.out.println("session id: " + session.getId());
         System.out.println("extractUserIdFromSession id: " + extractUserIdFromSession(session));
-        USER_SESSION_MAP.put(extractUserIdFromSession(session), session);
+        USER_SESSION_MAP.put(userId, session);
         log.info("用户{} 已上线，建立消息长连接", extractUserIdFromSession(session));
     }
 
     // 断开连接
     @OnClose
-    public void onClose(Session session) {
-        USER_SESSION_MAP.remove(extractUserIdFromSession(session));
-        log.info("用户{} 下线", extractUserIdFromSession(session));
+    public void onClose(Session session,@PathParam("userId") String userId) {
+        USER_SESSION_MAP.remove(userId);
+        log.info("用户{} 下线", userId);
     }
 
     // ========== 关键：给指定卖家单发消息 ==========
@@ -80,7 +77,7 @@ public class UserWebSocketServer {
         return path.substring(path.lastIndexOf("/") + 1);
     }
     @OnMessage
-    public void onMessage(String jsonString, Session session) throws IOException {
+    public void onMessage(String jsonString, Session session,@PathParam("userId") String userId) throws IOException {
         try {
             ObjectMapper om = new ObjectMapper();
             Map<String,Object> map = om.readValue(jsonString, Map.class);
@@ -89,7 +86,7 @@ public class UserWebSocketServer {
             String content = (String) map.get("content");
             // 生成 HH:mm 格式时间：19:30
             String nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-            System.out.println("用户"+extractUserIdFromSession(session)+"发送了"+content+"给用户:"+toUserId);
+            System.out.println("用户"+userId+"发送了"+content+"给用户:"+toUserId);
 //            SystemMessageMapper messageMapper = applicationContext.getBean(SystemMessageMapper.class);
             // 生成雪花 ID，和 MP 默认规则完全一致
             Long id = IdWorker.getId();
@@ -98,7 +95,7 @@ public class UserWebSocketServer {
                 Map<String, Object> msg = new HashMap<>();
                 msg.put("id",id);
                 msg.put("contactId",contactId);
-                msg.put("fromUserId", Long.parseLong(extractUserIdFromSession(session)));
+                msg.put("fromUserId", Long.parseLong(userId));
                 msg.put("toUserId", toUserId);
                 msg.put("content", content);
                 msg.put("time", nowTime);
@@ -113,6 +110,11 @@ public class UserWebSocketServer {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+    // ======================= 修复 2：必须加错误捕获，否则公网直接断连 =======================
+    @OnError
+    public void onError(Session session, Throwable throwable) {
+        log.error("WebSocket异常", throwable);
     }
     private boolean storeMessage(Long id,String jsonString){
         try {
