@@ -25,7 +25,7 @@ export default defineConfig({
     strictPort: true,
     allowedHosts: true, // 允许所有公网域名
 
-    // 关键！代理到后端公网地址（带8080端口）
+    // 关键！代理到后端公网地址（带8080端口）,开发用，部署上线后在Nginx中配置代理
     proxy: {
       '/api': {
         target: 'http://localhost:8081',
