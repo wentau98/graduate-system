@@ -1,5 +1,5 @@
-const baseURL = "http://10.230.153.165"
-const desktopIP = "10.230.153.165"
+const baseURL = "http://localhost"
+const desktopIP = "localhost"
 export default{
     baseURL,
     desktopIP
