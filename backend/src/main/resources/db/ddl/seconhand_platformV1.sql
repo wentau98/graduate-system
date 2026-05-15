@@ -33,6 +33,7 @@ CREATE TABLE `activity_banner`  (
   PRIMARY KEY (`banner_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '活动轮播海报表' ROW_FORMAT = Dynamic;
 
+SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Records of activity_banner
 -- ----------------------------
@@ -43,6 +44,7 @@ INSERT INTO `activity_banner` VALUES (3, '校园二手交易活动', 'https://pi
 -- ----------------------------
 -- Table structure for admin_user
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `admin_user`;
 CREATE TABLE `admin_user`  (
   `admin_id` bigint NOT NULL AUTO_INCREMENT COMMENT '管理员ID',
@@ -66,6 +68,7 @@ INSERT INTO `admin_user` VALUES (1, 'admin', '123', '温涛', NULL, 1, 1, '2026-
 -- ----------------------------
 -- Table structure for brand
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `brand`;
 CREATE TABLE `brand`  (
   `brand_id` int NOT NULL AUTO_INCREMENT COMMENT '品牌ID',
@@ -87,6 +90,7 @@ INSERT INTO `brand` VALUES (5, '乐视', '', 0, '2026-05-05 19:46:23');
 -- ----------------------------
 -- Table structure for category_brand_relation
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `category_brand_relation`;
 CREATE TABLE `category_brand_relation`  (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '关联ID',
@@ -110,6 +114,7 @@ INSERT INTO `category_brand_relation` VALUES (12, 3, 3, '2026-04-14 22:23:50');
 -- ----------------------------
 -- Table structure for chat_contact
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `chat_contact`;
 CREATE TABLE `chat_contact`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '会话ID',
@@ -134,6 +139,7 @@ INSERT INTO `chat_contact` VALUES (25, 3, 3, '干嘛', 1, '2026-05-05 22:28:38',
 -- ----------------------------
 -- Table structure for chat_message
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `chat_message`;
 CREATE TABLE `chat_message`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '消息ID',
@@ -166,6 +172,7 @@ INSERT INTO `chat_message` VALUES (2051701382306557954, 25, 3, 3, '干嘛', '202
 -- ----------------------------
 -- Table structure for delivery_address
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `delivery_address`;
 CREATE TABLE `delivery_address`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
@@ -185,6 +192,7 @@ INSERT INTO `delivery_address` VALUES (1, 67, 'as', 'sa', NULL, NULL);
 -- ----------------------------
 -- Table structure for delivery_address_for_display
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `delivery_address_for_display`;
 CREATE TABLE `delivery_address_for_display`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
@@ -202,6 +210,7 @@ INSERT INTO `delivery_address_for_display` VALUES (2, 'as', '2026-05-13 11:15:39
 -- ----------------------------
 -- Table structure for news
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `news`;
 CREATE TABLE `news`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '新闻ID，自增',
@@ -226,6 +235,7 @@ INSERT INTO `news` VALUES (6, '国乒男团为何输给瑞典队？🍛🍖🥩'
 -- ----------------------------
 -- Table structure for order_comment
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `order_comment`;
 CREATE TABLE `order_comment`  (
   `comment_id` bigint NOT NULL AUTO_INCREMENT COMMENT '评价ID',
@@ -252,6 +262,7 @@ INSERT INTO `order_comment` VALUES (1, 54, 75, 3, 3, 5, '很好的卖家', '2026
 -- ----------------------------
 -- Table structure for order_main
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `order_main`;
 CREATE TABLE `order_main`  (
   `order_id` bigint NOT NULL AUTO_INCREMENT COMMENT '订单ID',
@@ -305,6 +316,7 @@ INSERT INTO `order_main` VALUES (68, 'ORD-20260506005257-4214', 3, 3, 75, 'p1', 
 -- ----------------------------
 -- Table structure for product
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `product`;
 CREATE TABLE `product`  (
   `product_id` bigint NOT NULL AUTO_INCREMENT COMMENT '商品ID',
@@ -349,6 +361,7 @@ INSERT INTO `product` VALUES (78, '乐视显示器TSH2HZ', 3, 1, 5, '九成新',
 -- ----------------------------
 -- Table structure for product_category
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `product_category`;
 CREATE TABLE `product_category`  (
   `category_id` int NOT NULL AUTO_INCREMENT COMMENT '品类ID',
@@ -380,6 +393,7 @@ INSERT INTO `product_category` VALUES (1859092481, '教科书', -1253081086, 1, 
 -- ----------------------------
 -- Table structure for product_collection
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `product_collection`;
 CREATE TABLE `product_collection`  (
   `collect_id` bigint NOT NULL AUTO_INCREMENT COMMENT '收藏ID',
@@ -407,6 +421,7 @@ INSERT INTO `product_collection` VALUES (122, 77, 6, '2026-05-05 23:40:21');
 -- ----------------------------
 -- Table structure for product_image
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `product_image`;
 CREATE TABLE `product_image`  (
   `image_id` bigint NOT NULL AUTO_INCREMENT COMMENT '图片ID',
@@ -450,6 +465,7 @@ INSERT INTO `product_image` VALUES (26, 78, '/upload/product/e6b81bb1-3e69-4c01-
 -- ----------------------------
 -- Table structure for refund_record
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `refund_record`;
 CREATE TABLE `refund_record`  (
   `refund_id` bigint NOT NULL AUTO_INCREMENT COMMENT '退款ID',
@@ -477,6 +493,7 @@ CREATE TABLE `refund_record`  (
 -- ----------------------------
 -- Table structure for region
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `region`;
 CREATE TABLE `region`  (
   `region_id` int NOT NULL AUTO_INCREMENT COMMENT '地区ID',
@@ -909,6 +926,7 @@ INSERT INTO `region` VALUES (411, '澎湖县', 34, 2, 20, '712000', '2026-04-29 
 -- ----------------------------
 -- Table structure for system_message
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `system_message`;
 CREATE TABLE `system_message`  (
   `msg_id` bigint NOT NULL AUTO_INCREMENT COMMENT '消息ID',
@@ -930,6 +948,7 @@ CREATE TABLE `system_message`  (
 -- ----------------------------
 -- Table structure for trade_record
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `trade_record`;
 CREATE TABLE `trade_record`  (
   `record_id` bigint NOT NULL AUTO_INCREMENT COMMENT '流水ID',
@@ -953,6 +972,7 @@ CREATE TABLE `trade_record`  (
 -- ----------------------------
 -- Table structure for user_address
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `user_address`;
 CREATE TABLE `user_address`  (
   `address_id` bigint NOT NULL AUTO_INCREMENT COMMENT '地址ID',
@@ -978,6 +998,7 @@ CREATE TABLE `user_address`  (
 -- ----------------------------
 -- Table structure for user_info
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `user_info`;
 CREATE TABLE `user_info`  (
   `user_id` bigint NOT NULL AUTO_INCREMENT COMMENT '用户ID（主键）',
@@ -1011,6 +1032,7 @@ INSERT INTO `user_info` VALUES (6, 'user1', '123', NULL, NULL, '19145097704', '/
 -- ----------------------------
 -- Table structure for user_report
 -- ----------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `user_report`;
 CREATE TABLE `user_report`  (
   `report_id` bigint NOT NULL AUTO_INCREMENT COMMENT '举报ID',
