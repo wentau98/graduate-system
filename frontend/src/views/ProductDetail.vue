@@ -193,7 +193,7 @@ const buy = async () => {
     const res = await createOrder(product.productId, product.buyerId, product.sellerId)
     orderId.value = res.data
     ElMessage.success('订单创建成功')
-    payUrl.value = `http://10.164.234.165:8081/api/order/pay/${orderId.value}`
+    payUrl.value = `http://${variable.desktopIP}:8081/api/order/pay/${orderId.value}`
     console.log("payurl.value:", payUrl.value)
     // 后端返回订单号
     // product.orderNo = res.data.orderNo

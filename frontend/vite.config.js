@@ -28,12 +28,12 @@ export default defineConfig({
     // 关键！代理到后端公网地址（带8080端口）,开发用，部署上线后在Nginx中配置代理
     proxy: {
       '/api': {
-        target: 'http://localhost:8081',
+        target: 'http://223.6.255.134:8081',
         changeOrigin: true,
         // pathRewrite: { '^/api': '' }
       },
        '/upload': {
-        target: 'http://localhost:8081',
+        target: 'http://223.6.255.134:8081',
         changeOrigin: true
       }
     },
