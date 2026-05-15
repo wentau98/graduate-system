@@ -43,7 +43,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: frontend-dist
-          path: frontend/dist/
+          path: ./dist/
 
   # 后端 CI 任务（假设后端在 backend/ 目录，Java + Maven）
   backend-ci:
@@ -79,7 +79,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: frontend-dist
-          path: ./frontend/dist
+          path: ./dist
 
       - name: Download backend JAR artifact
         uses: actions/download-artifact@v4
