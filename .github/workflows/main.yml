@@ -104,7 +104,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "./jar/*"
+          source: "./backend/*"
           target: "/home/"
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@master
