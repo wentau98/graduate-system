@@ -109,27 +109,32 @@ jobs:
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@master
         with:
-            host: ${{ secrets.SSH_HOST }}
-            username: ${{ secrets.SSH_USER }}
-            key: ${{ secrets.SSH_PRIVATE_KEY }}
-            script: |
-              # 1. 进入jar包所在目录
-              cd /home
-              
-              # 2. 先尝试杀死所有java进程，|| true 表示即使没有进程可杀也不报错
-              pkill -f 'java -jar' || true
-              
-              # 3. 等待1秒确保旧进程完全退出
-              sleep 1
-              
-              # 4. 启动新jar包，并将日志输出到app.log
-              nohup java -jar *.jar > app.log 2>&1 &
-              
-              # 5. 打印启动结果，方便排错
-              echo "Backend restart command executed. Check app.log for details."
-              
-              # 6. 重启Nginx，刷新前端静态文件
-              systemctl restart nginx
-              echo "Nginx restarted successfully."
-        
-      
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          # 增加超时设置，避免被强制终止
+          timeout: 120s
+          script: |
+            set -e
+            cd /home
+            
+            # 1. 先杀死旧进程（加 || true 防止无进程报错）
+            echo "Killing old Java processes..."
+            pkill -f 'java -jar' || true
+            
+            # 2. 等待进程退出
+            sleep 2
+            
+            # 3. 启动新进程，日志输出到文件
+            echo "Starting new JAR..."
+            nohup java -jar *.jar > app.log 2>&1 &
+            
+            # 4. 给进程一点启动时间
+            sleep 5
+            
+            # 5. 重启 Nginx
+            echo "Restarting Nginx..."
+            systemctl restart nginx
+            
+            echo "✅ Deployment completed successfully!"
