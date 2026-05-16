@@ -41,7 +41,7 @@
     <!-- ====================== 右侧 20% 新闻 ====================== -->
     <div style="flex: 0 0 25%;">
       <div class="news-wrapper ">
-        <el-card class="news-size" :style="{ backgroundImage: 'url(/upload/bg/note.png)'}">
+        <el-card class="news-size" >
         <div class="news-item" v-for="item in newsList" :key="item.id" @click="handleNewsClick(item)">
           {{ item.title }}
         </div>

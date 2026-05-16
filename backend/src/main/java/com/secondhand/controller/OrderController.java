@@ -1,6 +1,7 @@
 package com.secondhand.controller;
 
 import com.secondhand.common.CommonResult;
+import com.secondhand.common.OrderStatus;
 import com.secondhand.entity.OrderMain;
 import com.secondhand.service.OrderService;
 import com.secondhand.vo.OrderCreateRequest;
@@ -55,6 +56,10 @@ public class OrderController {
     //发货成功,改订单状态
     @PutMapping("/sell/delivered/{orderId}")
     public CommonResult delivered(@PathVariable("orderId") Long orderId) {
-        return CommonResult.success(orderService.updateById(new OrderMain().setOrderId(orderId).setOrderStatus(3)));
+        return CommonResult.success(orderService.updateById(new OrderMain().setOrderId(orderId).setOrderStatus(OrderStatus.WAIT_RECEIVE)));
+    }
+    @PutMapping("/receive/{orderId}")
+    public CommonResult receivedGoods(@PathVariable("orderId") Long orderId) {
+        return CommonResult.success(orderService.updateById(new OrderMain().setOrderId(orderId).setOrderStatus(OrderStatus.COMPLETED)));
     }
 }

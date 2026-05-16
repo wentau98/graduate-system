@@ -33,14 +33,14 @@
           </div>
            <!-- ====================== 按钮区域 ====================== -->
           <div class="order-buttons" v-if="order.orderStatus === 1">
-            <el-button type="danger" size="small" @click="goToPay()">去付款</el-button>
+            <el-button type="danger" size="small" @click="goToPay">去付款</el-button>
           </div>
           <div class="order-buttons" v-if="order.orderStatus === 2">
             <el-button type="primary" size="small" @click="remindToDeliver(order)">提醒发货</el-button>
           </div>
           <div class="order-buttons" v-else-if="order.orderStatus === 3">
             <el-button type="success" size="small" @click="handleDeliveryPositionInfoDialog(order)">查看收货地点信息</el-button>
-            <el-button type="success" size="small" @click="confirmReceive(order)">确认收货</el-button>
+            <el-button type="success" size="small" @click="confirmReceive(order.orderId)">确认收货</el-button>
           </div>
           <div class="order-buttons" v-else-if="order.orderStatus === 4">
             <el-button type="warning" size="small" @click="openCommentDialog(order)">写评价</el-button>
@@ -194,6 +194,14 @@ const submitComment = async () => {
 }
 function handleDeliveryPositionInfoDialog(order){
   deliveryPositionInfoRef.value.openDeliveryDialog(order,1)
+}
+function confirmReceive(orderId){
+  try{
+    comfirmReceievedGoods(orderId)
+    ElMessage.success("确认收货成功")
+  }catch(err){
+    ElMessage.error("确认收货失败，请重试")
+  }  
 }
 </script>
 

@@ -80,3 +80,7 @@ export function orderStatusToWaitReceive(orderId){
     method: 'put'
   })
 }
+
+export function comfirmReceievedGoods(orderId){
+  return request.put(`api/order/receive/${orderId}`)
+}
