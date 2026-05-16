@@ -86,6 +86,18 @@ jobs:
         with:
           name: backend-jar
           path: ./jar
+      # 🌟 步骤 1：在上传任何东西之前，先连接服务器把活着的旧进程彻底干掉！空出文件锁！
+      - name: Stop Old Java Process first
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            echo "Stopping running app to release file locks..."
+            pkill -f 'java -jar' || true
+            sleep 2    
       # 部署dist和.jar
        # 上传前端 dist 到服务器 Nginx 目录
       - name: Upload frontend to server
@@ -107,6 +119,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "./jar/*.jar"
           target: "/home/"
+          strip_components: 1
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@master
         with:
@@ -117,37 +130,46 @@ jobs:
           # 增加超时设置，避免被强制终止
           timeout: 180s
           script: |
+            # set -e
+            # cd /home                        
+
+            # # 1. 更加温和且安全的进程清理（过滤掉当前 SSH 会话和 grep 自身）
+            # echo "Killing old Java processes..."
+            # PID=$(pgrep -f 'java -jar' | grep -v $$ || true)
+            # if [ -n "$PID" ]; then
+            #   echo "Found Java PID(s): $PID, killing..."
+            #   kill -15 $PID || true
+            #   sleep 3
+            #   # 如果还没死透，强制杀死
+            #   kill -9 $PID 2>/dev/null || true
+            # else
+            #   echo "No running Java processes found."
+            # fi
+
+            # # 2. 启动新进程（关键：加上 `disown` 并重定向 stdin）
+            # echo "Starting new JAR..."
+            # nohup java -jar *.jar > app.log 2>&1 < /dev/null &
+            
+            # # 使用 disown 让后台任务彻底脱离当前 SSH 会话
+            # disown %1 || true                        
+
+            # # 3. 给进程一点启动时间
+            # sleep 5                        
+
+            # # 4. 重启 Nginx
+            # echo "Restarting Nginx..."
+            # systemctl restart nginx                        
+
+            # echo "✅ Deployment completed successfully!"
             set -e
-            cd /home                        
-
-            # 1. 更加温和且安全的进程清理（过滤掉当前 SSH 会话和 grep 自身）
-            echo "Killing old Java processes..."
-            PID=$(pgrep -f 'java -jar' | grep -v $$ || true)
-            if [ -n "$PID" ]; then
-              echo "Found Java PID(s): $PID, killing..."
-              kill -15 $PID || true
-              sleep 3
-              # 如果还没死透，强制杀死
-              kill -9 $PID 2>/dev/null || true
-            else
-              echo "No running Java processes found."
-            fi
-
-            # 2. 启动新进程（关键：加上 `disown` 并重定向 stdin）
+            cd /home
             echo "Starting new JAR..."
             nohup java -jar *.jar > app.log 2>&1 < /dev/null &
-            
-            # 使用 disown 让后台任务彻底脱离当前 SSH 会话
-            disown %1 || true                        
-
-            # 3. 给进程一点启动时间
-            sleep 5                        
-
-            # 4. 重启 Nginx
+            disown %1 || true
+            sleep 5
             echo "Restarting Nginx..."
-            systemctl restart nginx                        
-
-            echo "✅ Deployment completed successfully!"
+            systemctl restart nginx
+            echo "✅ All deployment steps completed successfully!"
             
             # 5. 重启 Nginx
             echo "Restarting Nginx..."
