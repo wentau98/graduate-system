@@ -71,7 +71,7 @@ const handleScroll = () => {
 }
 
 webSocketStore.onMessage((msg)=>{
-  alert(msg)
+  // alert(msg)
 })
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
