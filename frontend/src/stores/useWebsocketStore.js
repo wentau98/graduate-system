@@ -17,9 +17,9 @@ export const useSocketStore = defineStore('socket', {
     initWebSocket(userId) {
       // 已经有连接并且正常，直接返回，防止重复创建
       if (this.ws && this.ws.readyState === WebSocket.OPEN) return
-
+      const currentHost = window.location.host
       this.userId = userId
-      const wsUrl = `ws://${variables.desktopIP}/ws/user/${userId}`
+      const wsUrl = `ws://${currentHost}/ws/user/${userId}`
       console.log("目前Websoket的后端IP为：",wsUrl)
       this.ws = new WebSocket(wsUrl)
 
