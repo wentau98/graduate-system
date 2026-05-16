@@ -5,7 +5,7 @@ server:
 spring:
   sql:
     init:
-      mode: always  # 可选：always/embedded/never
+      mode: never  # 可选：always/embedded/never
       schema-locations: classpath:db/ddl/*.sql
   main:
     allow-circular-references: true

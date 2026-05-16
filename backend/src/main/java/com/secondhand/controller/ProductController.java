@@ -29,15 +29,15 @@ public class ProductController {
     }
     //same as onSale
 
-//    @GetMapping("/detail/{id}")
-//    public CommonResult<ProductDetailVO> detail(@PathVariable Long id) {
-//        return CommonResult.success(productService.getById(id));
-//    }
+    @GetMapping("/detail/{id}")
+    public CommonResult<ProductDetailVO> detail(@PathVariable Long id) {
+        return CommonResult.success(productService.getById(id));
+    }
 
-//    @GetMapping("/onSale")
-//    public CommonResult<List<Product>> getOnSaleList() {
-//        return CommonResult.success(productService.getOnSaleList());
-//    }
+    @GetMapping("/onSale")
+    public CommonResult<List<Product>> getOnSaleList() {
+        return CommonResult.success(productService.getOnSaleList());
+    }
     @GetMapping("/keyword-search/{keyword}")
     public CommonResult<List<Product>> keywordSearch(@PathVariable("keyword") String keyword) {
         return CommonResult.success(productService.keywordSearch(keyword));
