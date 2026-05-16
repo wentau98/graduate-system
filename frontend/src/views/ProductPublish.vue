@@ -229,7 +229,7 @@ const publish = async () => {
   try {
     await publishProduct(submitData)
     ElMessage.success('发布成功')
-    router.push('/product/list')
+    router.push('/user/order')
   } catch (err) {
     ElMessage.error('发布失败')
     console.error(err)
