@@ -24,5 +24,7 @@ public interface ProductService {
 
     void offShelf(Long id, int offShelf);
 
+    CommonResult<List<Product>> listGoodsByUserId(Long userId);
+
 //    void soldOut(String orderId);
 }

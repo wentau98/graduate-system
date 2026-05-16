@@ -81,6 +81,21 @@ public class OrderServiceImpl extends ServiceImpl<OrderMainMapper,OrderMain> imp
     }
 
     @Override
+    public CommonResult<List<OrderMainVO>> listOrdersByUserIdAndStaus(Long userId, Integer status) {
+        //status:0 传过来的userId作为订单表的卖家sellerId,status:1 传过来的userId作为订单表的买家userId
+        try {
+            if(status == 0){
+                return CommonResult.success(orderMainMapper.selectBySellerId(userId));
+            }else{
+                return CommonResult.success(orderMainMapper.selectByUserId(userId));
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            return CommonResult.failed(e.getMessage());
+        }
+    }
+
+    @Override
     public List<OrderMainVO> getMyBuyList(Long userId) {
         return orderMainMapper.selectByUserId(userId);
     }

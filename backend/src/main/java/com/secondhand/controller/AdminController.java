@@ -40,7 +40,11 @@ public class AdminController {
     ) {
         return adminService.deleteUser(userId);
     }
-
+//    @Operation(summary = "查询用户详情信息")
+    @GetMapping("/user/detail/{id}")
+    public CommonResult<?> userDetail(@PathVariable Long id) {
+        return adminService.getUserDetail(id);
+    }
     // ====================== 商品管理 ======================
     @GetMapping("/product/list")
     @Operation(summary = "查询所有商品")

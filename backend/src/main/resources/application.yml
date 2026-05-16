@@ -15,6 +15,8 @@ spring:
     url: jdbc:mysql://localhost:3306/seconhand_platform?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: root
     password: Root@123456
+#    password: password
+
   servlet:
     multipart:
       max-file-size: 10MB

@@ -59,6 +59,12 @@ public interface ProductMapper extends BaseMapper<Product> {
     List<Product> getListByUserId(Long userId);
     @Update("update product set view_count = view_count+1 where product_id = #{id}")
     void updateViewCount(Long id);
+    @Select("SELECT p.*, pi.image_url AS imageUrl " +
+            "FROM product p " +
+            "LEFT JOIN product_image pi ON p.product_id = pi.product_id " +
+            "where p.seller_id = #{userId} and pi.image_sort = 1 "+
+            "ORDER BY p.create_time DESC")
+    List<Product> selectListByUserId(Long userId);
 //
 //    // 2. 更新商品审核状态（后台审核）
 //    @Update("UPDATE product SET product_status = #{auditStatus} WHERE product_id = #{productId}")

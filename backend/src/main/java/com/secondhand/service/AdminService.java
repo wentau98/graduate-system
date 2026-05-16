@@ -9,4 +9,6 @@ public interface AdminService {
     CommonResult<?> productList();
     CommonResult<?> allowProductOnSale(Long productId);
     CommonResult<?> orderList();
+
+    CommonResult<?> getUserDetail(Long id);
 }

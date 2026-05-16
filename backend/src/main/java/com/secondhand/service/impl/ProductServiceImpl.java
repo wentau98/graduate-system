@@ -123,4 +123,9 @@ public class ProductServiceImpl implements ProductService {
         product.setProductStatus(offShelf);
         productMapper.updateById(product);
     }
+
+    @Override
+    public CommonResult<List<Product>> listGoodsByUserId(Long userId) {
+        return CommonResult.success(productMapper.selectListByUserId(userId));
+    }
 }

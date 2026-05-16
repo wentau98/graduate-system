@@ -12,7 +12,17 @@ export function listUser() {
 export function deleteUser(userId) {
   return request.delete(`/api/admin/user/delete/${userId}`)
 }
-
+export function getUserDatail(id) {
+  return request.get(`/api/admin/user/detail/${id}`)
+}
+//AdminUser下的某个用户发布所有商品列表
+export function fetchUserProducts(userId) {
+  return request.get(`/api/admin/users/${userId}/goods`)
+}
+//AdminUser下的某个用户发布所有订单列表
+export function fetchUserOrders(userId,status){
+  return request.get(`/api/admin/users/${userId}/orders/${status}`)
+}
 // 商品管理
 export function listProduct() {
   return request.get('/api/admin/product/list')

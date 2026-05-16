@@ -67,4 +67,9 @@ public class AdminServiceImpl implements AdminService {
         List<OrderMain> list = orderMainMapper.selectAll();
         return CommonResult.success(list);
     }
+
+    @Override
+    public CommonResult<?> getUserDetail(Long id) {
+        return CommonResult.success(userInfoMapper.selectById(id));
+    }
 }

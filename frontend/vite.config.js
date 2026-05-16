@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
+import variable from './src/api/variable'
 
 export default defineConfig({
   base: './',
@@ -28,12 +29,12 @@ export default defineConfig({
     // 关键！代理到后端公网地址（带8080端口）,开发用，部署上线后在Nginx中配置代理
     proxy: {
       '/api': {
-        target: 'http://223.6.255.134:8081',
+        target: `${variable.baseURL}:${variable.port}`,
         changeOrigin: true,
         // pathRewrite: { '^/api': '' }
       },
        '/upload': {
-        target: 'http://223.6.255.134:8081',
+        target: `${variable.baseURL}:${variable.port}`,
         changeOrigin: true
       }
     },

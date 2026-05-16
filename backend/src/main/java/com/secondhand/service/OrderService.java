@@ -20,4 +20,6 @@ public interface OrderService extends IService<OrderMain> {
     List<OrderMainVO> getMyBuyList(Long userId);
 
     List<OrderMainVO> getMySellList(Long userId);
+
+    CommonResult<List<OrderMainVO>> listOrdersByUserIdAndStaus(Long userId, Integer status);
 }
