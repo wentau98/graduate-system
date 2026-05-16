@@ -23,8 +23,8 @@
           <span class="status">{{ productStatusMap[product.productStatus] }}</span>
         </div>
 
-        <div class="order-body" @click="router.push(`/product/detail/${product.productId}`)">
-          <div class="product-info">
+        <div class="order-body" >
+          <div class="product-info" @click="router.push(`/product/detail/${product.productId}`)">
             <img :src="product.imageUrl" class="product-img" />
             <div>
               <p>{{ product.productName }}</p>
@@ -113,16 +113,16 @@ const toOffShelf = (productId) => {
 // 上架
 const toUpShelf = (order) => {
   
-  ElMessage.success('已发送提醒收货通知')
+  ElMessage.success('已上架')
 }
 
-// 催促审核
+// 提醒审核
 const toRemindAudit = (order) => {
-  ElMessage.success('商品已重新上架')
+  ElMessage.success('已提醒审核')
 }
 // 催促审核
 const toApplyToAudit = (order) => {
-  ElMessage.success('商品已重新上架')
+  ElMessage.success('已催促审核')
 }
 // ======================================================
 const handleSellingProductClick = (order)=>{

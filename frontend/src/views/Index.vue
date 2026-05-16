@@ -57,6 +57,8 @@ import HomeTop from './HomeTop.vue'
 import Message from './Message.vue'
 import { useSocketStore } from '@/stores/useWebsocketStore'
 import { useUserStore } from '@/stores/user'
+import request from '@/api/request'
+import variable from '../api/variable'
 
 
 const router = useRouter()
@@ -84,6 +86,7 @@ onUnmounted(() => {
 // 加载数据
 onMounted(async () => {
   try {
+    console.log(`${variable.baseURL}${variable.port}`)
     const bannerRes = await getBannerList()
     bannerList.value = bannerRes.data || []
     

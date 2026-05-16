@@ -2,58 +2,62 @@
   <div class="sell-history-page">
     <h2>已售与评价</h2>
     <div class="tab-bar">
-      <span :class="{ active: activeTab === 'sold' }" @click="switchTab('sold')">
+      <span>
         已售商品
       </span>
-      <span :class="{ active: activeTab === 'comment' }" @click="switchTab('comment')">
+      <span>
         收到的评价
       </span>
     </div>
-
-    <!-- ====================================== -->
-    <!-- 1. 已售列表（独立加载） -->
-    <!-- ====================================== -->
-    <div v-if="activeTab === 'sold'" class="content">
-      <div class="order-list">
-        <div v-if="soldLoading" class="loading">加载中...</div>
-        <div v-else-if="soldList.length === 0" class="empty">暂无已售订单</div>
-        <div v-else class="order-item" v-for="order in soldList" :key="order.orderId">
-          <div class="order-header">
-            <span>订单号：{{ order.orderNo }}</span>
-            <span class="status">交易完成</span>
-          </div>
-          <div class="order-body">
-            <div class="product-info">
-              <img :src="order.imageUrl" class="product-img" />
-              <div>
-                <p>{{ order.productName }}</p>
-                <p class="price">¥{{ order.productPrice }}</p>
+    <el-row :gutter="20">
+      <el-col :span="11">
+        <div class="sold-history-content">
+          <div class="order-list">
+            <div v-if="soldLoading" class="loading">加载中...</div>
+            <div v-else-if="soldList.length === 0" class="empty">暂无已售订单</div>
+            <div v-else class="order-item" v-for="order in soldList" :key="order.orderId">
+              <div class="order-header">
+                <span>订单号：{{ order.orderNo }}</span>
+                <span class="status">交易完成</span>
+              </div>
+              <div class="order-body">
+                <div class="product-info">
+                  <img :src="order.imageUrl" class="product-img" />
+                  <div>
+                    <p>{{ order.productName }}</p>
+                    <p class="price">¥{{ order.productPrice }}</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </el-col>
+      <el-col :span="1">
+        <div class="middle_line"></div>
+      </el-col>
+      <el-col :span="11">
+        <div class="comment-content">
+          <div class="comment-list">
+            <div v-if="commentLoading" class="loading">加载评价中...</div>
+            <div v-else-if="commentList.length === 0" class="empty">暂无评价</div>
 
-    <!-- ====================================== -->
-    <!-- 2. 评价列表（独立加载） -->
-    <!-- ====================================== -->
-    <div v-else-if="activeTab === 'comment'" class="content">
-      <div class="comment-list">
-        <div v-if="commentLoading" class="loading">加载评价中...</div>
-        <div v-else-if="commentList.length === 0" class="empty">暂无评价</div>
-
-        <div class="comment-item" v-for="comment in commentList" :key="comment.commentId">
-          <div class="user-info">
-            <el-avatar :src="comment.avatar || 'https://picsum.photos/id/64/200/200'" />
-            <span class="username">{{ comment.username }}</span>
-            <el-rate :value="comment.score" disabled  show-score-text class="star" />
+            <div class="comment-item" v-for="comment in commentList" :key="comment.commentId">
+              <div class="user-info">
+                <el-avatar :src="comment.avatar || 'https://picsum.photos/id/64/200/200'" />
+                <span class="username">{{ comment.username }}</span>
+                <el-rate :value="comment.score" disabled show-score-text class="star" />
+              </div>
+              <div class="comment-content">{{ comment.content }}</div>
+              <div class="comment-time">{{ comment.createTime }}</div>
+            </div>
           </div>
-          <div class="comment-content">{{ comment.content }}</div>
-          <div class="comment-time">{{ comment.createTime }}</div>
         </div>
-      </div>
-    </div>
+      </el-col>
+
+    </el-row>
+
+
   </div>
 </template>
 
@@ -113,9 +117,8 @@ const loadCommentList = async () => {
 const switchTab = (tab) => {
   activeTab.value = tab
   if (tab === 'sold') {
-    loadSoldList()
+
   } else if (tab === 'comment') {
-    loadCommentList()
   }
 }
 
@@ -126,6 +129,8 @@ onMounted(() => {
     return
   }
   loadSoldList()
+  loadCommentList()
+
 })
 </script>
 
@@ -133,25 +138,34 @@ onMounted(() => {
 .sell-history-page {
   padding: 10px;
 }
+
 h2 {
   margin-bottom: 15px;
 }
+
 .tab-bar {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
   border-bottom: 1px solid #eee;
 }
+
 .tab-bar span {
   padding: 10px 15px;
   cursor: pointer;
 }
+
 .tab-bar span.active {
   color: #409eff;
   border-bottom: 2px solid #409eff;
 }
-.content {
+
+.sold-history-content {
   min-height: 300px;
+}
+
+.comment-content {
+  min-width: 300px;
 }
 
 /* 订单样式 */
@@ -161,24 +175,29 @@ h2 {
   padding: 15px;
   margin-bottom: 10px;
 }
+
 .order-header {
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
 }
+
 .status {
   color: #67c23a;
 }
+
 .product-info {
   display: flex;
   gap: 10px;
 }
+
 .product-img {
   width: 60px;
   height: 60px;
   object-fit: cover;
   border-radius: 4px;
 }
+
 .price {
   color: #ff4747;
   font-weight: bold;
@@ -192,30 +211,40 @@ h2 {
   margin-bottom: 12px;
   background: #fdfdfd;
 }
+
 .user-info {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 8px;
 }
+
 .username {
   font-weight: 500;
 }
+
 .star {
   margin-left: auto;
 }
+
 .comment-content {
   margin: 8px 0;
   color: #333;
 }
+
 .comment-time {
   font-size: 12px;
   color: #999;
 }
 
-.loading, .empty {
+.loading,
+.empty {
   text-align: center;
   padding: 40px 0;
   color: #999;
+}
+.middle_line{
+  border: 5px solid rgba(0, 0, 0, 0.025);
+  height: 100%;
 }
 </style>
