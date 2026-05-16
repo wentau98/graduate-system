@@ -23,8 +23,8 @@ import java.text.SimpleDateFormat;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 
 @Slf4j
-@Component
-@ServerEndpoint("/ws/user/{userId}")
+//@Component
+//@ServerEndpoint("/ws/user/{userId}")
 public class UserWebSocketServer {
     // 让这个类能获取 Spring Bean
     private static ApplicationContext applicationContext;
