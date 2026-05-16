@@ -96,8 +96,20 @@ jobs:
           port: 22
           script: |
             echo "Stopping running app to release file locks..."
-            pkill -f 'java -jar' || true
-            sleep 2    
+            
+            # 使用 awk 找出 8081 端口的 PID，这比 pkill 更加安全，绝对不会误杀当前 SSH 会话
+            PID=$(netstat -nlp | grep :8081 | awk '{print $7}' | cut -d'/' -f1 || true)
+            
+            if [ -n "$PID" ]; then
+              echo "Found Java process on port 8081 with PID: $PID. Killing it..."
+              kill -9 $PID || true
+              echo "Java process killed."
+            else
+              echo "No running process found on port 8081."
+            fi
+            
+            # 确保这一步的最后一行绝对返回 0，彻底堵死 exit code 1 的天坑
+            echo "Successfully released port 8081."    
       # 部署dist和.jar
        # 上传前端 dist 到服务器 Nginx 目录
       - name: Upload frontend to server
