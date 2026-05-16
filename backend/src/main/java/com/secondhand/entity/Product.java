@@ -3,14 +3,14 @@ package com.secondhand.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.AllArgsConstructor;
+
 import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
 //@AllArgsConstructor
-@TableName("Product")
+@TableName("product")
 public class Product {
     @TableId(type = IdType.AUTO) // 👈 关键！数据库自增
     private Long productId;
