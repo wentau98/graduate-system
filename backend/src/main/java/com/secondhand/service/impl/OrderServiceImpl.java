@@ -97,6 +97,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMainMapper,OrderMain> imp
     }
 
     @Override
+    public Object cancelOrder(Long orderId) {
+        return orderMainMapper.deleteById(orderId);
+    }
+
+    @Override
+    public Object deleteOrder(Long orderId) {
+        return orderMainMapper.deleteById(orderId);
+    }
+
+    @Override
     public List<OrderMainVO> getMyBuyList(Long userId) {
         return orderMainMapper.selectByUserId(userId);
     }

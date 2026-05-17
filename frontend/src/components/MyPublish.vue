@@ -3,12 +3,8 @@
     <h2>我的发布</h2>
 
     <div class="tab-bar">
-      <span
-        v-for="tab in tabs"
-        :key="tab.value"
-        :class="{ active: activeTab === tab.value }"
-        @click="activeTab = tab.value;load()"
-      >
+      <span v-for="tab in tabs" :key="tab.value" :class="{ active: activeTab === tab.value }"
+        @click="activeTab = tab.value; load()">
         {{ tab.label }}
       </span>
     </div>
@@ -23,7 +19,7 @@
           <span class="status">{{ productStatusMap[product.productStatus] }}</span>
         </div>
 
-        <div class="order-body" >
+        <div class="order-body">
           <div class="product-info" @click="router.push(`/product/detail/${product.productId}`)">
             <img :src="product.imageUrl" class="product-img" />
             <div>
@@ -33,7 +29,7 @@
           </div>
 
           <!-- ====================== 按钮区域 ====================== -->
-           <div class="order-buttons" v-if="product.productStatus === 1">
+          <div class="order-buttons" v-if="product.productStatus === 1">
             <el-button type="primary" size="small" @click="toOffShelf(product.productId)">下架物品</el-button>
           </div>
           <div class="order-buttons" v-if="product.productStatus === 2">
@@ -87,15 +83,15 @@ const filteredList = computed(() => {
   if (activeTab.value === 'all') return productList.value
   return productList.value.filter(o => o.productStatus === activeTab.value)
 })
-onMounted(async()=>{
-    
+onMounted(async () => {
+
 })
 const load = async () => {
   loading.value = true
   try {
     const userId = userStore.$state.userInfo.userId
     productList.value = (await getMyProduct(userId)).data
-    console.log("productList: ",productList.value)
+    console.log("productList: ", productList.value)
   } catch (err) {
     console.error('获取卖出订单失败', err)
   } finally {
@@ -105,17 +101,19 @@ const load = async () => {
 
 // ====================== 按钮事件 ======================
 // 下架
-const toOffShelf = (productId) => {
-  request.put(`api/product/status/off-shelf/${productId}`)
+const toOffShelf = async (productId) => {
+  await request.put(`api/product/status/off-shelf/${productId}`)
   ElMessage.success('已下架')
-  
+  await load()
   // 这里写跳转发货页面/调用发货接口
 }
 
 // 上架
-const toUpShelf = (productId) => {
-  request.put(`api/product/status/up-shelf/${productId}`)
+const toUpShelf = async (productId) => {
+  await request.put(`api/product/status/up-shelf/${productId}`)
   ElMessage.success('已上架')
+  await load()
+
 }
 
 // 提醒审核
@@ -130,7 +128,7 @@ const toApplyToAudit = (order) => {
   ElMessage.success('已催促审核')
 }
 // ======================================================
-const handleSellingProductClick = (order)=>{
+const handleSellingProductClick = (order) => {
   router.push
 }
 onMounted(() => load())
@@ -140,72 +138,87 @@ onMounted(() => load())
 .now-sell-page {
   padding: 10px;
 }
+
 h2 {
   margin-bottom: 15px;
 }
+
 .tab-bar {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
   border-bottom: 1px solid #eee;
 }
+
 .tab-bar span {
   padding: 10px 15px;
   cursor: pointer;
   border-radius: 10px;
 
 }
-.tab-bar span:hover{
+
+.tab-bar span:hover {
   background-color: #409eff;
   color: white;
   animation: btnColorChangeAnimation .3s ease-in-out;
 
 }
-@keyframes btnColorChangeAnimation{
-    0%{
-        background-color: #b381f5;
-        color: rgb(5, 6, 6);
-    }
-    50%{
-        color: rgb(5, 6, 6);
-    }
-    100%{
-        background-color: #409eff;
-    }
-    
+
+@keyframes btnColorChangeAnimation {
+  0% {
+    background-color: #b381f5;
+    color: rgb(5, 6, 6);
+  }
+
+  50% {
+    color: rgb(5, 6, 6);
+  }
+
+  100% {
+    background-color: #409eff;
+  }
+
 }
+
 .tab-bar span.active {
   color: #409eff;
   border-bottom: 2px solid #409eff;
 }
+
 .order-list {
   min-height: 300px;
 }
+
 .order-item {
   border: 1px solid #eee;
   border-radius: 8px;
   padding: 15px;
   margin-bottom: 10px;
 }
+
 .order-header {
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
 }
+
 .status {
   color: #67c23a;
 }
+
 .product-info {
   display: flex;
   gap: 10px;
   align-items: center;
 }
+
 .product-img {
   width: 60px;
   height: 60px;
   object-fit: cover;
   border-radius: 4px;
 }
+
 .price {
   color: #ff4747;
   font-weight: bold;
@@ -217,11 +230,13 @@ h2 {
   justify-content: space-between;
   align-items: center;
 }
+
 .order-buttons {
   margin-left: auto;
 }
 
-.loading, .empty {
+.loading,
+.empty {
   text-align: center;
   padding: 40px 0;
   color: #999;

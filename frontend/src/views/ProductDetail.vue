@@ -106,11 +106,11 @@ import { collectProduct } from '@/api/product'
 import { useUserStore } from '@/stores/user'
 // 二维码组件（你已经安装）
 import QrcodeVue from 'qrcode.vue'
-
+import variable from '@/api/variable'
 import { computed } from 'vue'
 import { getSellerInfo } from '@/api/user'
 import { addAsContact } from '@/api/contact'
-import variable from '@/api/variable'
+
 
 const route = useRoute()
 const router = useRouter()

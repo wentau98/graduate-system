@@ -35,9 +35,9 @@ public class OrderController {
     }
     //手机扫码支付接口
     @GetMapping("/pay/{id}")
-    public CommonResult<?> pay(@PathVariable Long id, Model model) {
+    public CommonResult<?> pay(@PathVariable String id, Model model) {
         model.addAttribute("orderId", id);
-        return orderService.payOrder(id);
+        return orderService.payOrder(Long.valueOf(id));
     }
 
     //前端检查是否支付接口
@@ -73,5 +73,15 @@ public class OrderController {
         long productId = orderService.getById(orderId).getProductId();
         productService.updateById(new Product().setProductId(productId).setProductStatus(ProductStatus.OFF_SHELF));
         return CommonResult.success(null);
+    }
+    //取消订单:买家
+    @PutMapping("/cancel/{orderId}")
+    public CommonResult cancelOrder(@PathVariable("orderId") Long orderId) {
+        return CommonResult.success(orderService.cancelOrder(orderId));
+    }
+    //删除订单：卖家
+    @PutMapping("/delete/{orderId}")
+    public CommonResult deleteOrder(@PathVariable("orderId") Long orderId) {
+        return CommonResult.success(orderService.deleteOrder(orderId));
     }
 }

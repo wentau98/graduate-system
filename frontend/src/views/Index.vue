@@ -1,18 +1,15 @@
 <template>
   <div>
-    <Navbar class="fixed-top"/>
+    <Navbar class="fixed-top" />
     <HomeTop @search-result="handleResult" />
     <!-- 商品列表：滚动一点 → 瞬间顶上去铺满全屏 -->
-    <div 
-      class="product-list-container"
-      :class="{ expand: scrollY > 40 }"
-    >
+    <div class="product-list-container" :class="{ expand: scrollY > 40 }">
       <el-empty v-if="!list.length" description="暂无商品，快去发布吧~" />
-      
+
       <el-row :gutter="10" v-else>
         <el-col :span="6" v-for="p in list" :key="p.productId" class="mb-4">
           <el-card class="product-card rounded-5" @click="$router.push(`/product/detail/${p.productId}`)">
-            <img :src="p.imageUrl" class="product-img" :alt="p.imageUrl"/>
+            <img :src="p.imageUrl" class="product-img" :alt="p.imageUrl" />
             <h3>{{ p.productName }}</h3>
             <p class="price-style">¥{{ p.sellingPrice }}</p>
             <p>{{ p.productDesc }}</p>
@@ -23,7 +20,7 @@
 
     <!-- ===================== 右侧固定悬浮侧边栏 ===================== -->
     <div class="sidebar-sticky">
-       <div class="sidebar-item" @click="$router.push('/sell')">
+      <div class="sidebar-item" @click="$router.push('/sell')">
         <i class="el-icon-document"></i>
         <span>发布商品</span>
       </div>
@@ -39,7 +36,7 @@
         <i class="el-icon-bell"></i>
         <span>消息通知</span>
       </div>
-     
+
     </div>
 
   </div>
@@ -59,6 +56,7 @@ import { useSocketStore } from '@/stores/useWebsocketStore'
 import { useUserStore } from '@/stores/user'
 import request from '@/api/request'
 import variable from '../api/variable'
+import { ElMessage } from 'element-plus'
 
 
 const router = useRouter()
@@ -72,8 +70,28 @@ const handleScroll = () => {
   scrollY.value = window.scrollY
 }
 
-webSocketStore.onMessage((msg)=>{
-  alert(msg)
+webSocketStore.onMessage((msg) => {
+  console.log("typeof msg is :", typeof msg)
+  let finalMsg = msg
+  if (typeof msg === 'string') {
+    try {
+      finalMsg = JSON.parse(msg)
+      console.log("the string type msg parsed into object:", finalMsg)
+      console.log("the string type msg parsed into object and the content is :", finalMsg.content)
+
+    } catch (err) {
+      // ElMessage.error(err)
+      console.log(err)
+    }
+  }
+  if (typeof finalMsg === 'object') {
+    // console.log(msg)
+    // console.log(typeof msg)
+
+    return
+  } else {
+    ElMessage.warning(finalMsg)
+  }
 })
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
@@ -89,23 +107,23 @@ onMounted(async () => {
     console.log(`${variable.baseURL}${variable.port}`)
     const bannerRes = await getBannerList()
     bannerList.value = bannerRes.data || []
-    
+
     const res = await getProductList()
     list.value = res.data || []
-    console.log("product list:",list)
+    console.log("product list:", list)
     // const wsStore = useSocketStore()
     // const userStore = useUserStore()
     // wsStore.initWebSocket(userStore.$state.userInfo.userId)
   } catch (err) {
     console.error('数据获取失败', err)
-  } 
+  }
 })
 
 // const goToLink = (link) => {
 //   if (link) router.push(link)
 // }
 
-const handleResult = (listFromSearch)=>{
+const handleResult = (listFromSearch) => {
   list.value = listFromSearch
 }
 
@@ -127,12 +145,14 @@ const handleResult = (listFromSearch)=>{
   position: relative;
   height: 400px;
 }
+
 .banner-img {
   width: 100%;
   height: 400px;
   object-fit: cover;
   cursor: pointer;
 }
+
 .banner-title {
   position: absolute;
   bottom: 20px;
@@ -141,16 +161,17 @@ const handleResult = (listFromSearch)=>{
   color: white;
   font-size: 28px;
   font-weight: bold;
-  text-shadow: 0 0 10px rgba(0,0,0,0.8);
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
   z-index: 10;
 }
+
 .banner-mask {
   position: absolute;
   left: 0;
   bottom: 0;
   width: 100%;
   height: 220px;
-  background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
   z-index: 5;
   pointer-events: none;
 }
@@ -162,13 +183,14 @@ const handleResult = (listFromSearch)=>{
   margin-top: -50px;
   padding: 40px 20px 60px;
   border-radius: 28px 28px 0 0;
-  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 30%, #fff 100%);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 30%, #fff 100%);
   transition: all 0.3s ease;
 }
 
 /* ===================== 滚动一点 → 瞬间顶上去铺满 ===================== */
 .product-list-container.expand {
-  margin-top: -300px !important; /* 直接顶上去盖住轮播图 */
+  margin-top: -300px !important;
+  /* 直接顶上去盖住轮播图 */
   padding-top: 180px !important;
   border-radius: 0 !important;
   background: #fff !important;
@@ -180,12 +202,13 @@ const handleResult = (listFromSearch)=>{
   cursor: pointer;
   background: transparent;
   backdrop-filter: blur(8px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   border: none;
 }
+
 .product-card:hover {
   transform: scale(1.04);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
 }
 
 .product-img {
@@ -194,15 +217,13 @@ const handleResult = (listFromSearch)=>{
   object-fit: cover;
   border-radius: 15px;
   margin-bottom: 10px;
-  
-  -webkit-mask-image: linear-gradient(to bottom, 
-    rgba(0,0,0,0.4) 0%,
-    rgba(0,0,0,1) 33%
-  );
-  mask-image: linear-gradient(to bottom, 
-    rgba(0,0,0,0.4) 0%,
-    rgba(0,0,0,1) 33%
-  );
+
+  -webkit-mask-image: linear-gradient(to bottom,
+      rgba(0, 0, 0, 0.4) 0%,
+      rgba(0, 0, 0, 1) 33%);
+  mask-image: linear-gradient(to bottom,
+      rgba(0, 0, 0, 0.4) 0%,
+      rgba(0, 0, 0, 1) 33%);
 }
 
 /* ===================== 【新增】右侧固定悬浮侧边栏 ===================== */
@@ -217,8 +238,8 @@ const handleResult = (listFromSearch)=>{
   backdrop-filter: blur(12px);
   border-radius: 12px;
   padding: 15px 10px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .sidebar-item {
@@ -241,7 +262,8 @@ const handleResult = (listFromSearch)=>{
   font-size: 20px;
   margin-bottom: 4px;
 }
-.price-style{
+
+.price-style {
   color: rgb(255, 79, 36);
   font-weight: 1000;
   /* background-color: #efefef; */

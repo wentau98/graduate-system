@@ -37,10 +37,10 @@
             <el-button type="primary" size="small" @click="handleOpenToDeliveryDialog(order)">去发货</el-button>
           </div>
           <div class="order-buttons" v-else-if="order.orderStatus === 3">
-            <el-button type="success" size="small" @click="remindReceive(order)">提醒收货</el-button>
+            <el-button type="success" size="small" @click="remindReceive(order.orderId)">提醒收货</el-button>
           </div>
           <div class="order-buttons" v-else-if="order.orderStatus === 5">
-            <el-button type="warning" size="small" @click="rePublish(order)">重新上架</el-button>
+            <el-button type="warning" size="small" @click="deleteOrder(order.orderId)">删除订单</el-button>
           </div>
           <!-- ======================================================= -->
         </div>
@@ -122,14 +122,16 @@ const toOffShelfAndEndRelativeOrders = async (orderId) => {
   }
 }
 // 重新上架
-const rePublish = (order) => {
-  ElMessage.success('商品已重新上架')
+const deleteOrder = async (orderId) => {
+  ElMessage.success('订单已删除')
+  await request.put(`/api/order/delete/${orderId}`)
+  await load()
 }
 // ======================================================
 const handleSellingProductClick = (order) => {
   router.push
 }
-function handleOpenToDeliveryDialog(order) {
+async function handleOpenToDeliveryDialog(order) {
   try {
     toDeliveryDialogRef.value.openDeliveryDialog(order)
 

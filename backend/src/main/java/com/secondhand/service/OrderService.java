@@ -22,4 +22,8 @@ public interface OrderService extends IService<OrderMain> {
     List<OrderMainVO> getMySellList(Long userId);
 
     CommonResult<List<OrderMainVO>> listOrdersByUserIdAndStaus(Long userId, Integer status);
+
+    Object cancelOrder(Long orderId);
+
+    Object deleteOrder(Long orderId);
 }
