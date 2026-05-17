@@ -45,12 +45,13 @@
           </div>
         </el-col>
         <el-col :span="4">
-          <el-row @click="handleAvatarClick">
+          <el-row @click="handleAvatarClick(seller.userId)">
             <el-col :span="6">
               <el-avatar
                 :src="seller.avatar || 'https://picsum.photos/id/64/200/200'"
                 class="avatar"
                 size="120"
+                :alt="`${seller.avatar}'s avatar`"
               />
             </el-col>
             <el-col :span="18">
@@ -302,8 +303,11 @@ const handleClickConsult = async()=>{
   }
   
 }
-const handleAvatarClick =()=>{
-  router.push("/user/center")
+const handleAvatarClick =(userId)=>{
+  router.push({
+    path:"/user/center",
+    query:{userId:userId}
+  })
 }
 
 </script>

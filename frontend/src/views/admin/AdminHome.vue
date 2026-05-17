@@ -135,7 +135,7 @@ const logout = () => {
 }
 
 .admin_sidebar_shrink {
-  width: 6% !important;
+  width: 8% !important;
   text-align: center;
 }
 

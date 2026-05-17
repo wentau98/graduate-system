@@ -1,5 +1,6 @@
 package com.secondhand.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -11,8 +12,8 @@ import java.util.List;
 @Data
 @TableName("product_category")  // 必须加
 public class ProductCategory {
-    @TableId
-    private Integer categoryId;
+        @TableId(type = IdType.AUTO)
+        private Integer categoryId;
     private String categoryName;
     private Integer parentId;
     private Integer level;

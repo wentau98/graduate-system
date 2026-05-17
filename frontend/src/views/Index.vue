@@ -12,7 +12,7 @@
       <el-row :gutter="10" v-else>
         <el-col :span="6" v-for="p in list" :key="p.productId" class="mb-4">
           <el-card class="product-card rounded-5" @click="$router.push(`/product/detail/${p.productId}`)">
-            <img :src="p.imageUrl" class="product-img" />
+            <img :src="p.imageUrl" class="product-img" :alt="p.imageUrl"/>
             <h3>{{ p.productName }}</h3>
             <p class="price-style">¥{{ p.sellingPrice }}</p>
             <p>{{ p.productDesc }}</p>

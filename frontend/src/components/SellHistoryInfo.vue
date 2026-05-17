@@ -76,12 +76,14 @@ const activeTab = ref('sold')
 // ======================================
 const soldList = ref([])
 const soldLoading = ref(false)
-
+const props = defineProps({
+  propUserId:null
+})
 const loadSoldList = async () => {
-  if (!userStore.$state.userInfo) return
+  if (!(userStore.$state.userInfo && props.propUserId)) return
   soldLoading.value = true
   try {
-    const userId = userStore.$state.userInfo.userId
+    const userId = props.propUserId || userStore.$state.userInfo.userId
     const res = await getMySellOrders(userId)
     soldList.value = (res.data || []).filter(item => item.orderStatus === 4)
   } catch (err) {
@@ -98,10 +100,10 @@ const commentList = ref([])
 const commentLoading = ref(false)
 
 const loadCommentList = async () => {
-  if (!userStore.$state.userInfo) return
+  if (!(userStore.$state.userInfo && props.propUserId)) return
   commentLoading.value = true
   try {
-    const userId = userStore.$state.userInfo.userId
+    const userId = props.propUserId || userStore.$state.userInfo.userId
     const res = await getSellerComments(userId) // 根据卖家ID查评价
     commentList.value = res.data || []
   } catch (err) {
@@ -243,7 +245,8 @@ h2 {
   padding: 40px 0;
   color: #999;
 }
-.middle_line{
+
+.middle_line {
   border: 5px solid rgba(0, 0, 0, 0.025);
   height: 100%;
 }
