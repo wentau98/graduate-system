@@ -18,8 +18,8 @@ public class ProductController {
     ProductService productService;
 
     @PostMapping("/publish")
-        public CommonResult<?> publish(@RequestBody ProductPublishVO productPublishVO) {
-        System.out.println("productPublishVO.getImageList"+productPublishVO.getImageList());
+    public CommonResult<?> publish(@RequestBody ProductPublishVO productPublishVO) {
+        System.out.println("productPublishVO.getImageList" + productPublishVO.getImageList());
         return productService.publish(productPublishVO);
     }
 
@@ -38,21 +38,36 @@ public class ProductController {
     public CommonResult<List<Product>> getOnSaleList() {
         return CommonResult.success(productService.getOnSaleList());
     }
+
     @GetMapping("/keyword-search/{keyword}")
     public CommonResult<List<Product>> keywordSearch(@PathVariable("keyword") String keyword) {
         return CommonResult.success(productService.keywordSearch(keyword));
     }
+
     @GetMapping("/category-search/{categoryId}")
     public CommonResult<List<Product>> categorySearch(@PathVariable("categoryId") long categoryId) {
         return CommonResult.success(productService.categorySearch(categoryId));
     }
+
     @PutMapping("/viewcount/add/{id}")
-    public void updateViewCount(@PathVariable Long id)  {
+    public void updateViewCount(@PathVariable Long id) {
         productService.updateViewCount(id);
     }
+
     @PutMapping("/status/off-shelf/{id}")
-    public void offShelf(@PathVariable Long id)  {
+    public void offShelf(@PathVariable Long id) {
         productService.offShelf(id, ProductStatus.OFF_SHELF);
     }
+    @PutMapping("/status/up-shelf/{id}")
+    public void upShelf(@PathVariable Long id) {
+        productService.upShelf(id, ProductStatus.UNDER_REVIEW);
+    }
+//    @PutMapping("/status/off-shelf/{id}")
+//    public void offShelf(@PathVariable Long id) {
+//        productService.offShelf(id, ProductStatus.OFF_SHELF);
+//    }
+
+//  request.get(`api/product/remind/audit/${productId}`)
+
 
 }

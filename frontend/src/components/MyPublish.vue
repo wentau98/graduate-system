@@ -7,7 +7,7 @@
         v-for="tab in tabs"
         :key="tab.value"
         :class="{ active: activeTab === tab.value }"
-        @click="activeTab = tab.value"
+        @click="activeTab = tab.value;load()"
       >
         {{ tab.label }}
       </span>
@@ -37,10 +37,10 @@
             <el-button type="primary" size="small" @click="toOffShelf(product.productId)">下架物品</el-button>
           </div>
           <div class="order-buttons" v-if="product.productStatus === 2">
-            <el-button type="primary" size="small" @click="toUpShelf(product)">上架物品</el-button>
+            <el-button type="primary" size="small" @click="toUpShelf(product.productId)">上架物品</el-button>
           </div>
           <div class="order-buttons" v-else-if="product.productStatus === 4">
-            <el-button type="success" size="small" @click="toRemindAudit(product)">催促审核</el-button>
+            <el-button type="success" size="small" @click="toRemindAudit(product.productId)">催促审核</el-button>
           </div>
           <div class="order-buttons" v-else-if="product.productStatus === 5">
             <el-button type="warning" size="small" @click="toApplyToAudit(product)">申请再次审核</el-button>
@@ -59,6 +59,7 @@ import { useUserStore } from '@/stores/user'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
 import { getMyProduct } from '@/api/product'
+import request from '@/api/request'
 
 const userStore = useUserStore()
 const activeTab = ref('all')
@@ -105,19 +106,23 @@ const load = async () => {
 // ====================== 按钮事件 ======================
 // 下架
 const toOffShelf = (productId) => {
+  request.put(`api/product/status/off-shelf/${productId}`)
+  ElMessage.success('已下架')
   
-  ElMessage.success('已下架' + order.orderNo)
   // 这里写跳转发货页面/调用发货接口
 }
 
 // 上架
-const toUpShelf = (order) => {
-  
+const toUpShelf = (productId) => {
+  request.put(`api/product/status/up-shelf/${productId}`)
   ElMessage.success('已上架')
 }
 
 // 提醒审核
-const toRemindAudit = (order) => {
+const toRemindAudit = (productId) => {
+  const userStore = useUserStore()
+  const userId = userStore.$state.userInfo.userId
+  request.get(`api/chat/remind/audit/${productId}/${userId}`)
   ElMessage.success('已提醒审核')
 }
 // 催促审核

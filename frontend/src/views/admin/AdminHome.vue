@@ -114,9 +114,13 @@ import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { Fold } from '@element-plus/icons-vue'
 import { ref } from 'vue'
+import { useSocketStore } from '@/stores/useWebsocketStore'
 const router = useRouter()
 const adminSideBarisActive = ref(false)
-
+// const webSocketStore = useSocketStore()
+// webSocketStore.onMessage((msg)=>{
+//   ElMessage.warning(msg)
+// })
 const logout = () => {
   localStorage.removeItem('adminToken')
   ElMessage.success('退出成功')

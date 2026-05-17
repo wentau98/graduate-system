@@ -7,4 +7,6 @@ import java.util.List;
 public interface ChatService {
     CommonResult<?> sendMsg(ChatMessage message);
     CommonResult<List<ChatMessage>> getHistory(Long senderId, Long receiverId);
+
+    Object remindAudit(long productId, long userId);
 }

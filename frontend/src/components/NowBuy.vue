@@ -102,6 +102,7 @@ import { reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import { addComment } from '@/api/comment'
 import DeliveryDialog from './DeliveryDialog.vue'
+import request from '@/api/request'
 const userStore = useUserStore()
 const showCommentDialog = ref(false)
 const currentOrderId = ref(null) // 接收父页面的 order_id,用于评价模态框
@@ -197,8 +198,9 @@ function handleDeliveryPositionInfoDialog(order){
 }
 function confirmReceive(orderId){
   try{
-    comfirmReceievedGoods(orderId)
+    request.put(`/api/order/receive/${orderId}`)
     ElMessage.success("确认收货成功")
+    load()
   }catch(err){
     ElMessage.error("确认收货失败，请重试")
   }  

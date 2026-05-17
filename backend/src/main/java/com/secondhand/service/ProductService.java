@@ -1,4 +1,5 @@
 package com.secondhand.service;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.secondhand.common.CommonResult;
 import com.secondhand.entity.Product;
 import com.secondhand.vo.ProductDetailVO;
@@ -6,7 +7,7 @@ import com.secondhand.vo.ProductPublishVO;
 
 import java.util.List;
 
-public interface ProductService {
+public interface ProductService extends IService<Product> {
     CommonResult<?> publish(Product product);
 
     CommonResult<?> publish(ProductPublishVO productPublishVO);
@@ -25,6 +26,12 @@ public interface ProductService {
     void offShelf(Long id, int offShelf);
 
     CommonResult<List<Product>> listGoodsByUserId(Long userId);
+
+    CommonResult<?> auditAllGoods();
+
+    CommonResult<?> auditRejectGoods(Long productId);
+
+    void upShelf(Long id, int onSale);
 
 //    void soldOut(String orderId);
 }

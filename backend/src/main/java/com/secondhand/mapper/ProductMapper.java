@@ -1,6 +1,7 @@
 package com.secondhand.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.secondhand.common.CommonResult;
 import com.secondhand.entity.Product;
 import com.secondhand.vo.ProductDetailVO;
 import org.apache.ibatis.annotations.*;
@@ -26,7 +27,7 @@ public interface ProductMapper extends BaseMapper<Product> {
     @Select("SELECT * FROM product WHERE seller_id=#{sid}")
     List<Product> selectBySellerId(Long sid);
 
-    @Update("UPDATE product SET product_status= 1 WHERE product_id=#{id}")
+    @Update("UPDATE product SET product_status= 1 WHERE product_id=#{id} and product_status = 4")
     int onSale(@Param("id") Long id);
 
     // ======================== 只追加这 3 个方法（给后台管理用） ========================
@@ -65,6 +66,10 @@ public interface ProductMapper extends BaseMapper<Product> {
             "where p.seller_id = #{userId} and pi.image_sort = 1 "+
             "ORDER BY p.create_time DESC")
     List<Product> selectListByUserId(Long userId);
+    @Update("update product set product_status = 1 where product_status = 4")
+    int updateAllProductStatus();
+    @Update("update product set product_status = 5 where product_id = #{productId} and product_status IN(1,4)")
+    int rejectUpdateGoods(Long productId);
 //
 //    // 2. 更新商品审核状态（后台审核）
 //    @Update("UPDATE product SET product_status = #{auditStatus} WHERE product_id = #{productId}")

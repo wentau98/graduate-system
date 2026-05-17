@@ -64,4 +64,6 @@ public class AdminController {
     public CommonResult<?> orderList() {
         return adminService.orderList();
     }
+
+
 }

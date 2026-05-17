@@ -35,6 +35,8 @@ public interface UserInfoMapper extends BaseMapper<UserInfo> {
     // 2. 根据ID删除用户（后台删除用户）
     @Delete("DELETE FROM user_info WHERE user_id = #{userId}")
     int deleteById(Long userId);
+@Select("select user_info.user_id from user_info where username = #{admin}")
+    int getUserIdByUsername(String admin);
 
 //    @Update("UPDATE user_info SET username=#{username},phone=#{phone},avatar=#{avatar},location=#{location}, " +
 //            "WHERE user_id=#{userId}")

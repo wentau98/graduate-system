@@ -1,10 +1,13 @@
 package com.secondhand.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yulichang.query.MPJQueryWrapper;
 import com.secondhand.common.CommonResult;
 import com.secondhand.entity.Product;
 import com.secondhand.entity.ProductImage;
+import com.secondhand.entity.vice.News;
+import com.secondhand.mapper.NewsMapper;
 import com.secondhand.mapper.ProductImageMapper;
 import com.secondhand.mapper.ProductMapper;
 import com.secondhand.service.ProductService;
@@ -17,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class ProductServiceImpl implements ProductService {
+public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> implements ProductService {
     @Resource
     ProductMapper productMapper;
     @Resource
@@ -127,5 +130,23 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public CommonResult<List<Product>> listGoodsByUserId(Long userId) {
         return CommonResult.success(productMapper.selectListByUserId(userId));
+    }
+
+    @Override
+    public CommonResult<?> auditAllGoods() {
+        return CommonResult.success(productMapper.updateAllProductStatus());
+    }
+
+    @Override
+    public CommonResult<?> auditRejectGoods(Long productId) {
+        return CommonResult.success(productMapper.rejectUpdateGoods(productId));
+    }
+
+    @Override
+    public void upShelf(Long id, int onSale) {
+        Product product = new Product();
+        product.setProductId(id);
+        product.setProductStatus(onSale);
+        productMapper.updateById(product);
     }
 }

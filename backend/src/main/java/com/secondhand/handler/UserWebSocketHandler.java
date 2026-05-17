@@ -136,6 +136,24 @@ public class UserWebSocketHandler extends TextWebSocketHandler {
             log.error("推送卖家消息失败", e);
         }
     }
+    /**
+     * send to specified person
+     */
+    public static void sendToSomeOne(String userId, String content) {
+        if (!USER_SESSION_MAP.containsKey(userId)) {
+            log.info("{}当前不在线，无法实时推送", userId);
+            return;
+        }
+        WebSocketSession session = USER_SESSION_MAP.get(userId);
+        try {
+            if (session != null && session.isOpen()) {
+                log.info("{}been pushed", userId);
+                session.sendMessage(new TextMessage(content));
+            }
+        } catch (Exception e) {
+            log.error("推送消息失败", e);
+        }
+    }
 
     /**
      * 工具方法：从 URI 中提取最后的 userId

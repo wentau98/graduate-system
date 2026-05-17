@@ -20,6 +20,8 @@ export const useSocketStore = defineStore('socket', {
       const currentHost = window.location.host
       this.userId = userId
       const wsUrl = `ws://${currentHost}/ws/user/${userId}`
+      // const wsUrl = `ws://${variables.desktopIP}:${variables.port}/ws/user/${userId}`
+
       console.log("目前Websoket的后端IP为：",wsUrl)
       this.ws = new WebSocket(wsUrl)
 

@@ -3,12 +3,8 @@
     <h2>我的售卖订单</h2>
 
     <div class="tab-bar">
-      <span
-        v-for="tab in tabs"
-        :key="tab.value"
-        :class="{ active: activeTab === tab.value }"
-        @click="activeTab = tab.value"
-      >
+      <span v-for="tab in tabs" :key="tab.value" :class="{ active: activeTab === tab.value }"
+        @click="activeTab = tab.value">
         {{ tab.label }}
       </span>
     </div>
@@ -33,8 +29,9 @@
           </div>
 
           <!-- ====================== 按钮区域 ====================== -->
-           <div class="order-buttons" v-if="order.orderStatus === 1">
-            <el-button type="primary" size="small" @click="toDelivery(order)">下架物品</el-button>
+          <div class="order-buttons" v-if="order.orderStatus === 1">
+            <el-button type="primary" size="small"
+              @click="toOffShelfAndEndRelativeOrders(order.orderId)">下架物品</el-button>
           </div>
           <div class="order-buttons" v-if="order.orderStatus === 2">
             <el-button type="primary" size="small" @click="handleOpenToDeliveryDialog(order)">去发货</el-button>
@@ -60,6 +57,7 @@ import { useUserStore } from '@/stores/user'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
 import DeliveryDialog from '@/components/DeliveryDialog.vue'
+import request from '@/api/request'
 
 const userStore = useUserStore()
 const activeTab = ref('all')
@@ -111,23 +109,31 @@ const toDelivery = (order) => {
 
 // 提醒收货
 const remindReceive = (order) => {
-  
+
   ElMessage.success('已发送提醒收货通知')
 }
+const toOffShelfAndEndRelativeOrders = async (orderId) => {
+  try {
+    request.put(`/api/order/off-shelf/${orderId}`)
+    ElMessage.success("下架成功!")
 
+  } catch (err) {
+    ElMessage.error(err)
+  }
+}
 // 重新上架
 const rePublish = (order) => {
   ElMessage.success('商品已重新上架')
 }
 // ======================================================
-const handleSellingProductClick = (order)=>{
+const handleSellingProductClick = (order) => {
   router.push
 }
-function handleOpenToDeliveryDialog(order){
-  try{
-  toDeliveryDialogRef.value.openDeliveryDialog(order)
-    
-  }catch(err){
+function handleOpenToDeliveryDialog(order) {
+  try {
+    toDeliveryDialogRef.value.openDeliveryDialog(order)
+
+  } catch (err) {
     ElMessage.error(err)
   }
 }
@@ -138,51 +144,62 @@ onMounted(() => load())
 .now-sell-page {
   padding: 10px;
 }
+
 h2 {
   margin-bottom: 15px;
 }
+
 .tab-bar {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
   border-bottom: 1px solid #eee;
 }
+
 .tab-bar span {
   padding: 10px 15px;
   cursor: pointer;
 }
+
 .tab-bar span.active {
   color: #409eff;
   border-bottom: 2px solid #409eff;
 }
+
 .order-list {
   min-height: 300px;
 }
+
 .order-item {
   border: 1px solid #eee;
   border-radius: 8px;
   padding: 15px;
   margin-bottom: 10px;
 }
+
 .order-header {
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
 }
+
 .status {
   color: #67c23a;
 }
+
 .product-info {
   display: flex;
   gap: 10px;
   align-items: center;
 }
+
 .product-img {
   width: 60px;
   height: 60px;
   object-fit: cover;
   border-radius: 4px;
 }
+
 .price {
   color: #ff4747;
   font-weight: bold;
@@ -194,11 +211,13 @@ h2 {
   justify-content: space-between;
   align-items: center;
 }
+
 .order-buttons {
   margin-left: auto;
 }
 
-.loading, .empty {
+.loading,
+.empty {
   text-align: center;
   padding: 40px 0;
   color: #999;

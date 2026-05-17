@@ -2,8 +2,11 @@ package com.secondhand.controller;
 
 import com.secondhand.common.CommonResult;
 import com.secondhand.common.OrderStatus;
+import com.secondhand.common.ProductStatus;
 import com.secondhand.entity.OrderMain;
+import com.secondhand.entity.Product;
 import com.secondhand.service.OrderService;
+import com.secondhand.service.ProductService;
 import com.secondhand.vo.OrderCreateRequest;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +19,8 @@ import jakarta.annotation.Resource;  // ✅ Spring Boot 3.x 正确包
 public class OrderController {
     @Resource
     OrderService orderService;
-
+    @Resource
+    ProductService productService;
     @PostMapping("/create")
     public CommonResult<?> create(@RequestBody OrderCreateRequest orderCreateRequest) {
         return orderService.createOrder(
@@ -61,5 +65,13 @@ public class OrderController {
     @PutMapping("/receive/{orderId}")
     public CommonResult receivedGoods(@PathVariable("orderId") Long orderId) {
         return CommonResult.success(orderService.updateById(new OrderMain().setOrderId(orderId).setOrderStatus(OrderStatus.COMPLETED)));
+    }
+    //下架product并且产生的订单置为5：已取消/api/order/off-shelf/${orderId}
+    @PutMapping("/off-shelf/{orderId}")
+    public CommonResult cancelProductAndOrders(@PathVariable("orderId") Long orderId) {
+        orderService.updateById(new OrderMain().setOrderId(orderId).setOrderStatus(OrderStatus.CANCELLED));
+        long productId = orderService.getById(orderId).getProductId();
+        productService.updateById(new Product().setProductId(productId).setProductStatus(ProductStatus.OFF_SHELF));
+        return CommonResult.success(null);
     }
 }

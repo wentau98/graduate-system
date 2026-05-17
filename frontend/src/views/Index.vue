@@ -67,13 +67,13 @@ const bannerList = ref([])
 const scrollY = ref(0)
 const showMessage = ref(false)
 const webSocketStore = useSocketStore()
-// 滚动监听
+滚动监听
 const handleScroll = () => {
   scrollY.value = window.scrollY
 }
 
 webSocketStore.onMessage((msg)=>{
-  // alert(msg)
+  alert(msg)
 })
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)

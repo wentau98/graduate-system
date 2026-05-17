@@ -7,6 +7,7 @@ import com.secondhand.UserWebSocketServer;
 import com.secondhand.common.CommonResult;
 import com.secondhand.common.OrderStatus;
 import com.secondhand.entity.OrderMain;
+import com.secondhand.handler.UserWebSocketHandler;
 import com.secondhand.mapper.OrderMainMapper;
 import com.secondhand.mapper.ProductMapper;
 import com.secondhand.service.OrderService;
@@ -48,7 +49,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMainMapper,OrderMain> imp
                 "【二手订单提醒】你的商品被下单！\n订单号：%s\n请尽快处理发货",
                 orderMain.getOrderNo()
         );
-        UserWebSocketServer.sendToSeller(orderMain.getSellerId().toString(),msg);
+        UserWebSocketHandler.sendToSeller(orderMain.getSellerId().toString(),msg);
         return CommonResult.success(null);
     }
 

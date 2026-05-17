@@ -5,12 +5,15 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
 //@AllArgsConstructor
 @TableName("product")
+@Accessors(chain = true)//允许new OrderMain().setOrderId(orderId).setOrderStatus(2)并且能返回orderMain
 public class Product {
     @TableId(type = IdType.AUTO) // 👈 关键！数据库自增
     private Long productId;
