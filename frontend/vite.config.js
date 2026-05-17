@@ -13,7 +13,7 @@ export default defineConfig({
         }
       }
     })],
-
+  base: './',  
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src')
@@ -30,6 +30,7 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: `${variable.baseURL}:${variable.port}`,
+        
         changeOrigin: true,
         // pathRewrite: { '^/api': '' }
       },
