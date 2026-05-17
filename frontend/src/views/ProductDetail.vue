@@ -45,13 +45,13 @@
           </div>
         </el-col>
         <el-col :span="4">
-          <el-row @click="handleAvatarClick(seller.userId)">
+          <el-row v-if="seller.avatar" @click="handleAvatarClick(seller.userId)">
             <el-col :span="6">
               <el-avatar
                 :src="seller.avatar || 'https://picsum.photos/id/64/200/200'"
                 class="avatar"
                 size="120"
-                :alt="`${seller.avatar}'s avatar`"
+                :alt="`${seller.username}'s avatar`"
               />
             </el-col>
             <el-col :span="18">
@@ -118,7 +118,7 @@ const data = ref({})
 
 const userStore = useUserStore()
 const user = userStore.$state.userInfo
-console.log("user:", user)
+console.log("userstore user:", user)
 const orderId = ref(0)
 const product = {
   productId: 0,
@@ -166,7 +166,7 @@ onMounted(async () => {
   imageList.value = fill(data.value.imageUrlList)
   const userInfoRes = await getSellerInfo(product.sellerId)
   seller.value = userInfoRes.data
-  console.log("seller: ",seller)
+  console.log("seller in this product's sellerId: ",seller)
   console.log("imageUrlList:", data.value.imageUrlList)
   console.log("imageList:", imageList.value)
   console.log("image sort and url in imageList:", imageList.value[0].imageSort, imageList.value[0].imageUrl)
